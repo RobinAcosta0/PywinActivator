@@ -9,8 +9,6 @@ import webbrowser
 from tkinter import font
 import sys
 
-if hasattr(sys, '_MEIPASS'):
-    os.chdir(sys._MEIPASS)
 
 
 serials = {
@@ -27,12 +25,24 @@ serials = {
 "Windows Enterprise 2015 LTSB":"M7XTQ-FN8P6-TTKYV-9D4CC-J462D",
 }
 
+
+kms_servers = {
+"kms.digiboy.ir",
+"kms8.msguides.com", 
+"kms.loli.beer", 
+"kms.cangshui.net", 
+"kms.kirito.best", 
+"kms.chinancce.com"}
+
+
+current_kms_server = "kms.digiboy.ir"
+
 class main_window:
 
 	def __init__(self):
 		root = Tk()
 		root.title("Python Win10 Activador")
-		icon = PhotoImage(file="img/winactivador.png")
+		icon = PhotoImage(file="resources/winactivador.png")
 		root.iconphoto(True, icon)
 		root.resizable(0,0)
 
@@ -58,12 +68,13 @@ class main_window:
 		button_gen_serial = Button(root,font=font_buttons, text="Generar Serial", width=20,height=8, bg="#00A1F1", fg="white", command=lambda:self.gen_serial(combo_list_version.get(), serials))
 		button_gen_serial.grid(row=4, column=0, padx=5, pady=5)
 
-		button_clean = Button(root,font=font_buttons, text="Limpiar Licencias", width=20, height=8,bg="#EA4335", fg="white", command=self.detele_windows_license)
+		button_clean = Button(root,font=font_buttons, text="Elegir servidor", width=20, height=8,bg="#EA4335", fg="white", command=self.choice_server)
 		button_clean.grid(row=3, column=0, padx=5, pady=5)
 
 		button_creator = Button(root, font=font_buttons,text="Github", width=20, height=8,bg="#FFBB00", fg="black", command=lambda:webbrowser.open("https://www.instagram.com/arobin404/"))
 		button_creator.grid(row=4, column=1, padx=5, pady=5)
-
+		self.current_server_label = Label(root, font=font_buttons,text=f"Servidor seleccionado > > > {current_kms_server}", bg="blue",width=35,fg="white")
+		self.current_server_label.grid(row=5, column=0,padx=5,pady=10,columnspan=2)
 
 		root.mainloop()
 
@@ -126,6 +137,53 @@ class main_window:
 
 
 
+
+
+
+	def choice_server(self):
+		root=Toplevel()
+		root.title("Cambiar servidor")
+		root.resizable(0,0)
+
+		selected_input = StringVar()
+		selected_input.set("Manual")
+
+		def select_recommended():
+
+			combo_list_server.config(state="readonly")
+			entry_manual_input.config(state="disabled")
+
+		def select_manual_input():
+			combo_list_server.config(state="disabled")
+			entry_manual_input.config(state="normal")
+
+
+		def select_input():
+			if selected_input.get() == "Manual":
+				current_kms_server = entry_manual_input.get()
+				self.current_server_label.config(text=f"Servidor seleccionado > > > {current_kms_server}")
+				root.destroy()
+
+			if selected_input.get() == "Recommended":
+				current_kms_server = combo_list_server.get()
+				self.current_server_label.config(text=f"Servidor seleccionado > > > {current_kms_server}")
+				root.destroy()
+
+
+		# Radiobuttons
+		Radiobutton(root, text="Recommended", variable=selected_input, value="Recommended", command=select_recommended).grid(row=0, column=0,pady=10,padx=5)
+		Radiobutton(root, text="Manual", variable=selected_input, value="Manual", command=select_manual_input).grid(row=1, column=0, pady=10,padx=5)
+
+		combo_list_server = ttk.Combobox(root,width=32,values=list(kms_servers),state="disabled")
+		combo_list_server.grid(row=0, column=1, padx=10)
+
+		entry_manual_input = Entry(root,width=35)
+		entry_manual_input.grid(row=1, column=1,padx=10)
+
+		select_button = Button(root, text="Aceptar", width=20, command=select_input)
+		select_button.grid(row=2, columnspan=2,pady=15)
+
+		root.mainloop()
 
 
 
