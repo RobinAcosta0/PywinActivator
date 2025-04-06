@@ -11,6 +11,13 @@ import sys
 
 
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS 
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 serials = {
 "Windows 10 Home":"TX9XD-98N7V-6WMQ6-BX7FG-H8Q99",
 "Windows 10 Home N":"3KHY7-WNT83-DGQKR-F7HPR-844BM",
@@ -42,20 +49,20 @@ class main_window:
 	def __init__(self):
 		root = Tk()
 		root.title("Python Win10 Activador")
-		icon = PhotoImage(file="resources/winactivador.png")
+		icon = PhotoImage(file=resource_path("resources/winactivador.png"))
 		root.iconphoto(True, icon)
 		root.resizable(0,0)
 
 		font_buttons = font.Font(family="Corbel")
 
-		#VERSION SELECTION
+		#SELECCION DE VERSION WINDOWS A ACTIVAR
 		version_label = Label(root, text="Seleciona tu version de Windows:", font=font_buttons)
 		version_label.grid(row=0, column=0, columnspan=2,pady=10)
 		combo_list_version = ttk.Combobox(root, state="readonly",width=35,values=list(serials))
 		combo_list_version.grid(row=1, column=0, columnspan=2)
 
 
-		#STATE LABEL
+		#ETIQUETA DE ESTADO
 		self.stateSV = StringVar()
 		self.stateSV.set("Bienvenido")
 		label_state = Label(root, textvariable=self.stateSV, fg="white", bg="green", width=35,font=font_buttons)
@@ -68,10 +75,10 @@ class main_window:
 		button_gen_serial = Button(root,font=font_buttons, text="Generar Serial", width=20,height=8, bg="#00A1F1", fg="white", command=lambda:self.gen_serial(combo_list_version.get(), serials))
 		button_gen_serial.grid(row=4, column=0, padx=5, pady=5)
 
-		button_clean = Button(root,font=font_buttons, text="Elegir servidor", width=20, height=8,bg="#EA4335", fg="white", command=self.choice_server)
-		button_clean.grid(row=3, column=0, padx=5, pady=5)
+		button_choose_server = Button(root,font=font_buttons, text="Elegir servidor", width=20, height=8,bg="#EA4335", fg="white", command=self.choice_server)
+		button_choose_server.grid(row=3, column=0, padx=5, pady=5)
 
-		button_creator = Button(root, font=font_buttons,text="Github", width=20, height=8,bg="#FFBB00", fg="black", command=lambda:webbrowser.open("https://www.instagram.com/arobin404/"))
+		button_creator = Button(root, font=font_buttons,text="Github", width=20, height=8,bg="#FFBB00", fg="black", command=lambda:webbrowser.open("https://github.com/RobinAcosta0/PywinActivator"))
 		button_creator.grid(row=4, column=1, padx=5, pady=5)
 		self.current_server_label = Label(root, font=font_buttons,text=f"Servidor seleccionado > > > {current_kms_server}", bg="blue",width=35,fg="white")
 		self.current_server_label.grid(row=5, column=0,padx=5,pady=10,columnspan=2)
@@ -139,11 +146,12 @@ class main_window:
 
 
 
-
+	#VENTANA PARA LA SELECCION DEL SERVIDOR KMS QUE SE QUIERE UTILIZAR
 	def choice_server(self):
 		root=Toplevel()
 		root.title("Cambiar servidor")
 		root.resizable(0,0)
+		root.grab_set()
 
 		selected_input = StringVar()
 		selected_input.set("Manual")
